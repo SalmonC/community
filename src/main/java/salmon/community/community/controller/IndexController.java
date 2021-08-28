@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @date 2021-08-28 20:35
  */
 @Controller
-public class HelloController {
-    @GetMapping("/hello")
-    public String hello(@RequestParam(name = "name") String name, Model model) {
-        model.addAttribute("name", name);
-        return "hello";
-
+public class IndexController {
+    @GetMapping("/")
+    public String index() {
+        return "index";
     }
 }
