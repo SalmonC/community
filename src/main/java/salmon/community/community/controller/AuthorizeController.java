@@ -11,7 +11,9 @@ import salmon.community.community.mapper.UserMapper;
 import salmon.community.community.model.User;
 import salmon.community.community.provider.GithubProvider;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 /**
@@ -38,7 +40,8 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
-                           HttpServletRequest request) {
+                           HttpServletRequest request,
+                           HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setCode(code);
         accessTokenDTO.setRedirect_uri(redirectUri);
@@ -46,21 +49,25 @@ public class AuthorizeController {
         accessTokenDTO.setClient_secret(clientSecret);
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getUser(accessToken);
-        System.out.println(githubUser);
 
-        if(githubUser != null) {
+        if (githubUser != null) {
             //登录成功, 写Cookie和Session
-            request.getSession().setAttribute("user",githubUser);
+//              不需写入Session了. 插入数据库后用数据库代替Session
+//            request.getSession().setAttribute("user",githubUser);
             User user = new User();
-            user.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            user.setToken(token);
             user.setName(githubUser.getName());
-            user.setAccountId(githubUser.getId()+"");
+            user.setAccountId(githubUser.getId() + "");
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
             System.out.println();
             userMapper.insertUser(user);
+            response.addCookie(new Cookie("token", token));
+
+
             return "redirect:/";
-        }else {
+        } else {
             return "redirect:/";
         }
     }
