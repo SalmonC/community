@@ -14,6 +14,7 @@ import salmon.community.community.provider.GithubProvider;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Random;
 import java.util.UUID;
 
 /**
@@ -40,6 +41,7 @@ public class AuthorizeController {
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
+
                            HttpServletRequest request,
                            HttpServletResponse response) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
@@ -61,6 +63,7 @@ public class AuthorizeController {
             user.setAccountId(githubUser.getId() + "");
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+            user.setAvatarUrl(githubUser.getAvatarUrl());
             System.out.println();
             userMapper.insertUser(user);
             response.addCookie(new Cookie("token", token));
@@ -71,4 +74,5 @@ public class AuthorizeController {
             return "redirect:/";
         }
     }
+
 }

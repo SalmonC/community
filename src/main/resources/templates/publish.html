@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>草鱼社区</title>
+    <title>发布 - 草鱼社区</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
@@ -35,7 +35,7 @@
                 </li>
                 <li class="dropdown" th:if="${session.user != null}">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false" th:text="${session.user.name}"><span class="caret"></span></a>
+                       aria-expanded="false" th:text="${session.user.getName()}"><span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">消息中心</a></li>
                         <li><a href="#">个人资料</a></li>
@@ -43,39 +43,53 @@
                         <li><a href="#">退出登录</a></li>
                     </ul>
                 </li>
-                <li th:unless="${session.user != null}">
-                    <a href="https://github.com/login/oauth/authorize?client_id=166a3787299b37a4eb60&redirect_uri=http://localhost:8887/callback&scope=user&state=1">登录</a>
+                <li th:unless="${session.user != null}"><a
+                        href="https://github.com/login/oauth/authorize?client_id=166a3787299b37a4eb60&redirect_uri=http://localhost:8887/callback&scope=user&state=1">登录</a>
                 </li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
-</nav>
 
+
+</nav>
 <div class="container-fluid main">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
-            <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 发现</h2>
+            <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发布</h2>
             <hr>
 
-            <div class="media" th:each="question : ${questions}">
-                <div class="media-left">
-                    <a href="#">
-                        <img class="media-object img-rounded"
-                             th:src="${question.user.avatarUrl}"
-                        >
-                    </a>
+            <form action="/publish" method="post">
+                <div class="form-group">
+                    <label for="title">问题标题（简单扼要）：</label>
+                    <input type="text" class="form-control" id="title" th:value="${tittle}" name="title"
+                           placeholder="问题标题......">
                 </div>
-                <div class="media-body">
-                    <h4 class="media-heading" th:text="${question.title}"></h4>
-                    <span th:text="${question.description}"/><br>
-                    <span class="text-desc">
-                        <span th:text="${question.commentCount}"></span> 个回复 -
-                        <span th:text="${question.viewCount}"></span> 次浏览 - 发布时间:
-                        <span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"/>
-                    </span>
+                <div class="form-group">
+                    <label for="description">问题补充 (必填，请参照右侧提示):</label>
+                    <textarea class="form-control" id="description" th:text="${description}" name="description"
+                              placeholder="问题补充......" cols="30" rows="10"></textarea>
                 </div>
-            </div>
+                <div class="form-group">
+                    <label for="tag">添加标签:</label>
+                    <input type="text" class="form-control" th:value="${tag}" id="tag" name="tag"
+                           placeholder="输入标签, 以&quot,&quot隔开">
+                </div>
 
+                <div class="container-fluid main">
+                    <div class="row">
+                        <div class="alert alert-danger col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                             th:text="${error}"
+                             th:if="${error != null}">
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-success btn-publish">
+                                发布
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
             <h3>问题发起指南</h3>
@@ -85,6 +99,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>
