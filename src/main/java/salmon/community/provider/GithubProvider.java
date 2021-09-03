@@ -1,10 +1,10 @@
-package salmon.community.community.provider;
+package salmon.community.provider;
 
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
 import org.springframework.stereotype.Component;
-import salmon.community.community.dto.AccessTokenDTO;
-import salmon.community.community.dto.GithubUser;
+import salmon.community.dto.AccessTokenDTO;
+import salmon.community.dto.GithubUser;
 
 import java.io.IOException;
 
@@ -40,7 +40,7 @@ public class GithubProvider {
 //                .build();
         Request request = new Request.Builder()
                 .url("https://api.github.com/user")
-                .header("Authorization","token "+accessToken)
+                .header("Authorization", "token " + accessToken)
                 .build();
 
         try (Response response = client.newCall(request).execute()) {

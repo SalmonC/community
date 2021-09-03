@@ -1,4 +1,4 @@
-package salmon.community.community.dto;
+package salmon.community.dto;
 
 /**
  * @author SalmonC

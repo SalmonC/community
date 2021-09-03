@@ -1,4 +1,4 @@
-package salmon.community.community.dto;
+package salmon.community.dto;
 
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
