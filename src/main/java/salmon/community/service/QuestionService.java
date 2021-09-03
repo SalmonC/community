@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import salmon.community.dto.PaginationDTO;
 import salmon.community.dto.QuestionDTO;
+import salmon.community.exception.CustomizeErrorCode;
+import salmon.community.exception.CustomizeException;
+import salmon.community.mapper.QuestionExtMapper;
 import salmon.community.mapper.QuestionMapper;
 import salmon.community.mapper.UserMapper;
 import salmon.community.model.Question;
@@ -28,6 +31,8 @@ public class QuestionService {
     @Autowired
     QuestionMapper questionMapper;
 
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
         Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
@@ -91,6 +96,9 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null) {
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question, questionDTO);
         questionDTO.setUser(userMapper.selectByPrimaryKey(question.getCreator()));
@@ -104,8 +112,15 @@ public class QuestionService {
             questionMapper.insertSelective(question);
         } else {
             question.setGmtModified(System.currentTimeMillis());
-            questionMapper.updateByPrimaryKeySelective(question);
+            int updated = questionMapper.updateByPrimaryKeySelective(question);
+            if(updated != 1) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
+    }
+
+    public void incView(Integer id) {
+        questionExtMapper.incView(id);
     }
 }
 

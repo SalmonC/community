@@ -1,0 +1,1 @@
+alter table USER alter column account_id SET not null;
