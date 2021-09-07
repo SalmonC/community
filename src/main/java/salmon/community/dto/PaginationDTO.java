@@ -11,12 +11,12 @@ import java.util.List;
  * @date 2021-08-30 23:56
  */
 @Data
-public class PaginationDTO {
-    private List<QuestionDTO> questions;
-    private boolean showPrevious;
-    private boolean showFirstPage;
-    private boolean showNextPage;
-    private boolean showEndPage;
+public class PaginationDTO<T> {
+    private List<T> data;
+    private Boolean showPrevious;
+    private Boolean showFirstPage;
+    private Boolean showNextPage;
+    private Boolean showEndPage;
     private Integer totalPage;
     /**
      * 当前显示的页数
@@ -31,7 +31,7 @@ public class PaginationDTO {
         this.page = page;
 
         pages.add(page);
-        for (int i = 1; i <= Constants.PAGE_WIDTH; i++) {
+        for (int i = 1; i <= Constants.NAV_WIDTH; i++) {
             if (page - i > 0) {
                 pages.add(0, page - i);
             }

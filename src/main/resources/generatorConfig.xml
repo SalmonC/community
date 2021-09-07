@@ -37,6 +37,8 @@
             <property name="useActualColumnNames" value="false"/>
         </table>
         <table tableName="question" domainObjectName="Question"/>
+        <table tableName="comment" domainObjectName="Comment"/>
+        <table tableName="notification" domainObjectName="Notification"/>
 
     </context>
 </generatorConfiguration>
