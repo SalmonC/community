@@ -10,6 +10,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import salmon.community.Constants;
 import salmon.community.dto.PaginationDTO;
 import salmon.community.dto.QuestionDTO;
 import salmon.community.exception.CustomizeErrorCode;
@@ -61,6 +62,11 @@ public class QuestionService {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
             BeanUtils.copyProperties(question, questionDTO);
+            String description = questionDTO.getDescription();
+            if(description.length() > Constants.LONGEST_DESC_PREVIEWED){
+                String substring = description.substring(0, Constants.FOLDED_DESC_LENGTH) + "...";
+                questionDTO.setDescription(substring);
+            }
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
