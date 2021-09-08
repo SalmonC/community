@@ -26,14 +26,16 @@
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发布</h2>
             <hr>
             <form action="/publish" method="post">
+                <h4>主题</h4>
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
-                    <label for="title">主题:</label>
+<!--                    <label for="title">主题:</label>-->
                     <input type="text" class="form-control" id="title" th:value="${tittle}" name="title"
-                           placeholder="问题标题......" autocomplete="off">
+                           placeholder="在此输入主题" autocomplete="off">
                 </div>
+                <h4>正文</h4>
                 <div class="form-group" id="question-editor">
-                    <label for="description">正文: </label>
+<!--                    <label for="description">正文: </label>-->
                     <textarea
                             name="description"
                             id="description"

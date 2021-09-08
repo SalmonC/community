@@ -28,7 +28,11 @@ public class FileController {
         MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
         MultipartFile file = ((MultipartHttpServletRequest) request).getFile("editormd-image-file");
         try {
-            aliYunProvider.upload(file.getInputStream(), file.getOriginalFilename());
+            String url = aliYunProvider.upload(file.getInputStream(), file.getOriginalFilename());
+            FileDTO fileDTO = new FileDTO();
+            fileDTO.setSuccess(1);
+            fileDTO.setUrl(url);
+            return fileDTO;
         } catch (IOException e) {
             e.printStackTrace();
         }
