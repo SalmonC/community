@@ -22,6 +22,7 @@ import salmon.community.mapper.UserMapper;
 import salmon.community.model.Question;
 import salmon.community.model.QuestionExample;
 import salmon.community.model.User;
+import salmon.community.model.UserExample;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -194,6 +195,27 @@ public class QuestionService {
 
     public List<QuestionDTO> selectHot() {
         return questionExtMapper.selectHot();
+    }
+
+    public void deleteByToken(String token, Long questionId) {
+        Question question = questionMapper.selectByPrimaryKey(questionId);
+        if (question == null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
+        UserExample userExample = new UserExample();
+        userExample.createCriteria()
+                .andTokenEqualTo(token);
+        List<User> users = userMapper.selectByExample(userExample);
+        User user = null;
+        if (users != null || users.size()>0){
+            user = users.get(0);
+        }else{
+            throw new CustomizeException(CustomizeErrorCode.NO_LOGIN);
+        }
+        if(!user.getId().equals(question.getCreator())){
+            throw new CustomizeException(CustomizeErrorCode.NO_AUTHORITY);
+        }
+        questionMapper.deleteByPrimaryKey(questionId);
     }
 }
 

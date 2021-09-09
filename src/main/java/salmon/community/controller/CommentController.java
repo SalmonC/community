@@ -11,6 +11,7 @@ import salmon.community.enums.CommentTypeEnum;
 import salmon.community.exception.CustomizeErrorCode;
 import salmon.community.model.Comment;
 import salmon.community.model.User;
+import salmon.community.provider.GithubProvider;
 import salmon.community.service.CommentService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,9 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    GithubProvider githubProvider;
+
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
@@ -33,7 +37,9 @@ public class CommentController {
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {
             //此处不直接抛异常, 而是传输JSON,以实现页面局部刷新
-            return ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
+            ResultDTO resultDTO = ResultDTO.errorOf(CustomizeErrorCode.NO_LOGIN);
+            resultDTO.setGithubOAuthUrl(githubProvider.githubOAuthUrl);
+            return resultDTO;
         }
         if(commentCreateDTO == null || StringUtils.isBlank(commentCreateDTO.getContent())) {
             return ResultDTO.errorOf(CustomizeErrorCode.CONTENT_IS_EMPTY);

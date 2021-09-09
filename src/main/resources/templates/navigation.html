@@ -6,13 +6,13 @@
 
 <div th:fragment="nav">
     <nav class="navbar navbar-default">
-        <div class="container-fluid">
+        <div class="container-fluid background_blue">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                         data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">草鱼社区</span>
+                    <span class="sr-only">鱼西社区</span>
                 </button>
-                <a class="navbar-brand" href="/">草鱼社区</a>
+                <a class="navbar-brand" href="/">鱼西社区</a>
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -48,7 +48,7 @@
                         </ul>
                     </li>
                     <li th:unless="${session.user != null}">
-                        <a href="https://github.com/login/oauth/authorize?client_id=166a3787299b37a4eb60&redirect_uri=http://localhost:8887/callback&scope=user&state=1">登录</a>
+                        <a th:href="${session.githubOAuthUrl}">登录</a>
                     </li>
                 </ul>
             </div><!-- /.navbar-collapse -->

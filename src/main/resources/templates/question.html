@@ -16,12 +16,12 @@
     <script src="/js/lib/prettify.min.js"></script>
 
 </head>
-<body>
+<body class="body">
 <div th:insert="~{navigation :: nav}"></div>
-<div class="container-fluid main profile">
+<div class="container-fluid main profile background_transparent">
     <div class="row">
         <!--        左边主要内容-->
-        <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 background_white">
             <!--            正文-->
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h3><span th:text="${question.title}"></span></h3>
@@ -33,11 +33,11 @@
             </span>
                 <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <!--                内容-->
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view" >
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="question-view">
                     <textarea style="display:none;" th:text="${question.description}"></textarea>
                 </div>
                 <script type="text/javascript">
-                    $(function() {
+                    $(function () {
                         editormd.markdownToHTML("question-view", {});
                     });
                 </script>
@@ -58,10 +58,11 @@
                        th:if="${session.user!=null && session.user.id == question.creator}">
                         <span class="glyphicon glyphicon-pencil" aria-hidden="true">编辑</span>
                     </a>
-<!--                    <a th:href="@{'/publish/'+${question.id}}" class="community-menu"-->
-<!--                       th:if="${session.user!=null && session.user.id == question.creator}">-->
-<!--                        <span class="glyphicon glyphicon-pencil" aria-hidden="true">删除</span>-->
-<!--                    </a>-->
+                    <span> | </span>
+                    <a th:href="@{'/delete/'+${question.id}}" class="community-menu"
+                       th:if="${session.user!=null && (session.user.id == question.creator || session.user.authority >= 1)}">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true">删除</span>
+                    </a>
                 </div>
             </div>
 
@@ -135,14 +136,17 @@
                         </div>
                     </div>
                     <input type="hidden" id="question_id" th:value="${question.id}">
-                    <textarea class="form-control comment" rows="6" id="comment_content" th:placeholder="${session.user != null ? '请在此输入回复' : '未登录不能回复哦'}"></textarea>
-                    <button type="button" class="btn  btn-comment " th:classappend="${session.user != null ? 'btn-success' : 'btn-danger'}" onclick="post()">回复</button>
+                    <textarea class="form-control comment" rows="6" id="comment_content"
+                              th:placeholder="${session.user != null ? '请在此输入回复' : '未登录不能回复哦'}"></textarea>
+                    <button type="button" class="btn  btn-comment "
+                            th:classappend="${session.user != null ? 'btn-success' : 'btn-danger'}" onclick="post()">回复
+                    </button>
                 </div>
             </div>
         </div>
 
         <!--        右边信息块-->
-        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 background_white">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <h4>提问者</h4>
                 <div class="media">
@@ -160,12 +164,12 @@
                 </div>
             </div>
 
-<!--            添加图片-->
-<!--            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-<!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-<!--                <h4>标题</h4>-->
-<!--                <img src="/img/xxx" class="img-thumbnail question-wechat">-->
-<!--            </div>-->
+            <!--            添加图片-->
+            <!--            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+            <!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
+            <!--                <h4>标题</h4>-->
+            <!--                <img src="/img/xxx" class="img-thumbnail question-wechat">-->
+            <!--            </div>-->
 
             <!--            相关问题-->
             <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

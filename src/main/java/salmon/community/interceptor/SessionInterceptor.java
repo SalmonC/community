@@ -1,18 +1,21 @@
 package salmon.community.interceptor;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import salmon.community.mapper.UserMapper;
 import salmon.community.model.User;
 import salmon.community.model.UserExample;
+import salmon.community.provider.GithubProvider;
 import salmon.community.service.NotificationService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 import java.util.List;
 
 /**
@@ -27,9 +30,14 @@ public class SessionInterceptor implements HandlerInterceptor {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private GithubProvider githubProvider;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();
+        HttpSession session = request.getSession();
+        Boolean hasUser = false;
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if ("token".equals(cookie.getName())) {
@@ -40,14 +48,17 @@ public class SessionInterceptor implements HandlerInterceptor {
                     List<User> users = userMapper.selectByExample(userExample);
                     if (users.size() != 0) {
                         User user = users.get(0);
-                        HttpSession session = request.getSession();
                         Long unreadCount = notificationService.unreadCount(user.getId());
                         session.setAttribute("user", user);
                         session.setAttribute("unreadCount", unreadCount);
+                        hasUser = true;
                     }
                     break;
                 }
             }
+        }
+        if (!hasUser) {
+            session.setAttribute("githubOAuthUrl", githubProvider.getGithubOAuthUrl());
         }
         return true;
     }

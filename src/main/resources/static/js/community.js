@@ -34,9 +34,10 @@ function comment2target(targetId, type, content) {
                     var isAccepted = confirm(response.message);
                     if (isAccepted) {
                         $('#myModal').modal({});
-                        // window.open("https://github.com/login/oauth/authorize?client_id=7f316909bf70d1eaa2b2&redirect_uri=" + document.location.origin + "/callback&scope=user&state=1");
-                        // window.localStorage.setItem("closable", true);
+                        window.open(response.githubOAuthUrl);
+                        window.localStorage.setItem("closable", true);
                     }
+                    window.location.reload();
                 } else {
                     alert(response.message);
                 }
@@ -146,8 +147,7 @@ function selectTag(e) {
             //若value没有作为一个独立的标签出现过
             $("#tag").val(previous + "," + value);
         }
-    }
-    else {
+    } else {
         $("#tag").val(value);
     }
 }

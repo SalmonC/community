@@ -30,7 +30,7 @@ public class CustomizeExceptionHandler {
         String contentType = request.getContentType();
         if("application/json".equals(contentType)) {
             // 返回JSON, 不跳转页面
-            ResultDTO resultDTO = new ResultDTO();
+            ResultDTO resultDTO;
             if(e instanceof CustomizeException) {
                 resultDTO = ResultDTO.errorOf((CustomizeException) e);
             }else{
