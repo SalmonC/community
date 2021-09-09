@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import salmon.community.Constants;
 import salmon.community.dto.PaginationDTO;
+import salmon.community.dto.QuestionDTO;
 import salmon.community.service.QuestionService;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author SalmonC
@@ -23,11 +28,13 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model,
                         @RequestParam(name = "page", defaultValue = "1") Integer page,
-                        @RequestParam(name = "size", defaultValue = "5") Integer size) {
-        size = Constants.QUESTION_PAGE_SIZE;
-
-        PaginationDTO pagination = questionService.list(page, size);
+                        @RequestParam(name = "search", required = false) String search,
+                        HttpServletRequest httpServletRequest) {
+        PaginationDTO pagination = questionService.listForIndex(search, page, Constants.QUESTION_PAGE_SIZE);
+        List<QuestionDTO> hotQuestions = questionService.selectHot();
         model.addAttribute("pagination", pagination);
+        model.addAttribute("search", search);
+        model.addAttribute("hotQuestions", hotQuestions);
         return "index";
     }
 }

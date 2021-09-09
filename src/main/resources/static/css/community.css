@@ -69,8 +69,8 @@ body {
 }
 
 .question-related {
-    line-height: 20px;
-    font-size: 14px;
+    line-height: 25px;
+    font-size: 15px;
     margin-left: 0;
     list-style: none;
     padding-left: 0;
@@ -170,4 +170,20 @@ body {
 
 .red {
     color: red !important;
+}
+
+.redNotice {
+    background-color: #d9534f;
+}
+.noticeMarginBottom {
+    margin-bottom: 4px;
+}
+
+.avatarMarginTop {
+    margin-top: 8px;
+}
+
+.mainBodyPadding {
+    padding-left: 38px;
+    padding-top: 15px;
 }

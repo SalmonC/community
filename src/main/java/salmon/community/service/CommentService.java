@@ -4,6 +4,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import salmon.community.dto.CommentCreateDTO;
 import salmon.community.dto.CommentDTO;
 import salmon.community.enums.CommentTypeEnum;
 import salmon.community.enums.NotificationStatusEnum;
@@ -41,7 +42,17 @@ public class CommentService {
     NotificationMapper notificationMapper;
 
     @Transactional(rollbackFor = Exception.class)
-    public void insert(Comment comment, User commentator) {
+    public void insert(User commentator, CommentCreateDTO commentCreateDTO) {
+        Comment comment = new Comment();
+        comment.setParentId(commentCreateDTO.getParentId());
+        comment.setContent(commentCreateDTO.getContent());
+        comment.setType(commentCreateDTO.getType());
+        long time = System.currentTimeMillis();
+        comment.setGmtCreate(time);
+        comment.setGmtModified(time);
+        comment.setCommentator(commentator.getId());
+        comment.setLikeCount(0L);
+        comment.setCommentCount(0);
         if (comment.getParentId() == null || comment.getParentId() == 0) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_NOT_FOUND);
         }
@@ -84,6 +95,9 @@ public class CommentService {
 
     //创建通知
     private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationTypeEnum, Long outerId) {
+        if(receiver.equals(comment.getCommentator())){
+            return;
+        }
         Notification notification = new Notification();
         notification.setGmtCreate(comment.getGmtCreate());
         notification.setType(notificationTypeEnum.getType());

@@ -13,7 +13,7 @@
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
-<div class="container-fluid main profile">
+<div class="container-fluid main profile mainBodyPadding">
     <div class="row">
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
             <h2><span th:text="${sectionName}"></span></h2>
@@ -23,13 +23,13 @@
                 <div class="media" th:each="question : ${pagination.data}">
                     <div class="media-left">
                         <a href="#">
-                            <img class="media-object img-rounded"
+                            <img class="media-object img-rounded avatarMarginTop"
                                  th:src="${question.user.avatarUrl}">
                         </a>
                     </div>
                     <div class="media-body">
                         <h4 class="media-heading">
-                            <a th:href="@{'/question/'+${question.id}}"  th:text="${question.title}"></a>
+                            <a th:href="@{'/question/'+${question.id}}" th:text="${question.title}"></a>
                         </h4>
                         <span class="text-desc">
                         <span th:text="${question.commentCount}"></span> 个回复 -
@@ -52,7 +52,7 @@
                             <a th:href="@{'/notification/'+${notification.id}}"
                                th:text="${notification.outerTitle}">
                             </a>
-                            <span class="label label-danger" th:if="${notification.isUnread}">未读</span>
+                            <span class="label label-danger noticeMarginBottom" th:if="${notification.isUnread}">未读</span>
                         </p>
 
                     </div>
@@ -98,12 +98,14 @@
                 <a href="/profile/replies"
                    th:class="${section=='replies'} ? 'active list-group-item' : 'list-group-item'">
                     最新回复
-                    <span class="badge" th:text="${session.unreadCount}"></span>
+                    <span class="badge" th:classappend="${session.unreadCount!=0} ? 'redNotice':''"
+                          th:text="${session.unreadCount}"></span>
                 </a>
             </div>
         </div>
 
     </div>
 </div>
+<div th:insert="~{footer :: foot}"></div>
 </body>
 </html>

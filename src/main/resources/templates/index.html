@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>草鱼社区</title>
+    <title>鱼西社区</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
@@ -13,7 +13,7 @@
 <script type="application/javascript">
     window.onload = function () {
         var closable = window.localStorage.getItem('closable');
-        if(closable == "true") {
+        if (closable == "true") {
             window.close();
             window.localStorage.removeItem("closable");
         }
@@ -23,8 +23,9 @@
 
 <div th:insert="~{navigation :: nav}"></div>
 
-<div class="container-fluid main">
+<div class="container-fluid main mainBodyPadding">
     <div class="row">
+        <!--        左边主要内容-->
         <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
             <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 发现</h2>
             <hr>
@@ -51,37 +52,47 @@
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li th:if="${pagination.showFirstPage}">
-                        <a th:href="@{/(page=1)}" aria-label="First">
+                        <a th:href="@{/(page=1,search=${search})}" aria-label="First">
                             <span aria-hidden="true">&lt;&lt;</span>
                         </a>
                     </li>
                     <li th:if="${pagination.showPrevious}">
-                        <a th:href="@{/(page=${pagination.page}-1)}" aria-label="Previous">
+                        <a th:href="@{/(page=${pagination.page}-1,search=${search})}" aria-label="Previous">
                             <span aria-hidden="true">&lt;</span>
                         </a>
                     </li>
                     <li th:each="page : ${pagination.pages}" th:class="${pagination.page==page}? 'active' : ''">
                         <a
-                                th:href="@{/(page=${page})}" th:text="${page}">
+                                th:href="@{/(page=${page},search=${search})}" th:text="${page}">
                         </a></li>
                     <li th:if="${pagination.showNextPage}">
-                        <a th:href="@{/(page=${pagination.page}+1)}" aria-label="Next">
+                        <a th:href="@{/(page=${pagination.page}+1,search=${search})}" aria-label="Next">
                             <span aria-hidden="true">&gt;</span>
                         </a>
                     </li>
                     <li th:if="${pagination.showEndPage}">
-                        <a th:href="@{/(page=${pagination.totalPage})}" aria-label="End">
+                        <a th:href="@{/(page=${pagination.totalPage},search=${search})}" aria-label="End">
                             <span aria-hidden="true">&gt;&gt;</span>
                         </a>
                     </li>
                 </ul>
             </nav>
         </div>
-
+        <!--        右边信息块-->
         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-            <h3>热门项目</h3>
+            <!--            热门信息-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h3>热门帖子</h3>
+                <ul class="question-related">
+                    <li th:each="hot : ${hotQuestions}">
+                        <span class="glyphicon glyphicon-fire red"></span>
+                        <a th:href="@{'/question/'+${hot.id}}" th:text="' '+${hot.title}"></a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
+<div th:insert="~{footer :: foot}"></div>
 </body>
 </html>

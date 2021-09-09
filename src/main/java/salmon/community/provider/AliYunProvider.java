@@ -35,6 +35,9 @@ public class AliYunProvider {
     @Value("${aliyun.oss.bucketName}")
     private String bucketName;
 
+    @Value("${aliyun.oss.filePathHeader}")
+    private String filePathHeader;
+
     public String upload(InputStream fileStream,
                          String fileName) {
         // 创建OSSClient实例。
@@ -53,19 +56,23 @@ public class AliYunProvider {
             ossClient.putObject(bucketName, generateFileName, fileStream);
 
             //设置失效时间并获取url
-            Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000);
-            // 生成以GET方法访问的签名URL，访客可以直接通过浏览器访问相关内容。
-            URL urlObject = ossClient.generatePresignedUrl(bucketName, generateFileName, expiration);
-            if (urlObject != null) {
-                String url = urlObject.toString();
-                return url;
-            } else {
-                throw new Exception();
-            }
+            return filePathHeader + generateFileName;
         } catch (Exception e) {
             throw new CustomizeException(CustomizeErrorCode.FILE_UPLOAD_FAIL);
         } finally {
             ossClient.shutdown();
+        }
+    }
+
+    private String getSTSUrl(OSS ossClient, String generateFileName) throws Exception {
+        Date expiration = new Date(System.currentTimeMillis() + 3600 * 1000);
+        // 生成以GET方法访问的签名URL，访客可以直接通过浏览器访问相关内容。
+        URL urlObject = ossClient.generatePresignedUrl(bucketName, generateFileName, expiration);
+        if (urlObject != null) {
+            String url = urlObject.toString();
+            return url;
+        } else {
+            throw new Exception();
         }
     }
 

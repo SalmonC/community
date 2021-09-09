@@ -38,16 +38,7 @@ public class CommentController {
         if(commentCreateDTO == null || StringUtils.isBlank(commentCreateDTO.getContent())) {
             return ResultDTO.errorOf(CustomizeErrorCode.CONTENT_IS_EMPTY);
         }
-        Comment comment = new Comment();
-        comment.setParentId(commentCreateDTO.getParentId());
-        comment.setContent(commentCreateDTO.getContent());
-        comment.setType(commentCreateDTO.getType());
-        long time = System.currentTimeMillis();
-        comment.setGmtCreate(time);
-        comment.setGmtModified(time);
-        comment.setCommentator(user.getId());
-        comment.setLikeCount(0L);
-        commentService.insert(comment, user);
+        commentService.insert(user,commentCreateDTO);
         return ResultDTO.okOf();
     }
 

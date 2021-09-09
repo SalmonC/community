@@ -20,7 +20,7 @@
 
 <div th:insert="~{navigation :: nav}"></div>
 
-<div class="container-fluid main">
+<div class="container-fluid main mainBodyPadding">
     <div class="row">
         <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
             <h2><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 发布</h2>
@@ -29,13 +29,13 @@
                 <h4>主题</h4>
                 <input type="hidden" name="id" th:value="${id}">
                 <div class="form-group">
-<!--                    <label for="title">主题:</label>-->
+                    <!--                    <label for="title">主题:</label>-->
                     <input type="text" class="form-control" id="title" th:value="${tittle}" name="title"
                            placeholder="在此输入主题" autocomplete="off">
                 </div>
                 <h4>正文</h4>
                 <div class="form-group" id="question-editor">
-<!--                    <label for="description">正文: </label>-->
+                    <!--                    <label for="description">正文: </label>-->
                     <textarea
                             name="description"
                             id="description"
@@ -109,12 +109,20 @@
             </form>
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h3>问题发起指南</h3>
-            • 问题标题: 请用精简的语言描述您发布的问题，不超过25字 <br>
-            • 问题补充: 详细补充您的问题内容，并确保问题描述清晰直观, 并提供一些相关的资料<br>
-            • 选择标签: 选择一个或者多个合适的标签，用英文逗号或者分号隔开，每个标签不超过10个字<br>
+            <h3>发帖指南</h3>
+            <hr>
+            <h5>
+                • 标题: 请用精简的语言描述您发布的问题，不超过25字
+            </h5>
+            <h5>
+                • 正文: 支持MarkDown语法及图片上传，图片大小请勿超过10MB
+            </h5>
+            <h5>
+                • 选择标签: 选择一个或者多个合适的标签，请勿手动输入标签
+            </h5>
         </div>
     </div>
 </div>
+<div th:insert="~{footer :: foot}"></div>
 </body>
 </html>
