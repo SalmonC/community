@@ -95,13 +95,12 @@ public class CommentService {
 
     //创建通知
     private void createNotify(Comment comment, Long receiver, String notifierName, String outerTitle, NotificationTypeEnum notificationTypeEnum, Long outerId) {
-        if(receiver.equals(comment.getCommentator())){
+        if (receiver.equals(comment.getCommentator())) {
             return;
         }
         Notification notification = new Notification();
         notification.setGmtCreate(comment.getGmtCreate());
         notification.setType(notificationTypeEnum.getType());
-        Long parentId = comment.getParentId();
         notification.setOuterid(outerId);
         notification.setNotifier(comment.getCommentator());
         notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
@@ -122,22 +121,38 @@ public class CommentService {
             return new ArrayList<>();
         }
 
-        Set<Long> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
-        List<Long> userIds = new ArrayList<>(commentators);
+        List<Long> userIds = comments.stream().map(Comment::getCommentator).distinct().collect(Collectors.toList());
 
         UserExample userExample = new UserExample();
         userExample.createCriteria().andIdIn(userIds);
         List<User> users = userMapper.selectByExample(userExample);
-        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(User::getId, user -> user));
 
 
-        List<CommentDTO> commentDTOList = comments.stream().map(comment -> {
+        return comments.stream().map(comment -> {
             CommentDTO commentDTO = new CommentDTO();
             BeanUtils.copyProperties(comment, commentDTO);
             User user = userMap.get(comment.getCommentator());
             commentDTO.setUser(user);
             return commentDTO;
         }).collect(Collectors.toList());
-        return commentDTOList;
+    }
+
+    @Transactional
+    public void deleteByMainQuestionId(Long questionId) {
+        CommentExample commentExample = new CommentExample();
+        commentExample.createCriteria()
+                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType())
+                .andParentIdEqualTo(questionId);
+        List<Comment> comments = commentMapper.selectByExample(commentExample);
+        comments.forEach(comment -> {
+            commentMapper.deleteByPrimaryKey(comment.getId());
+            //删除每个评论的二级评论
+            CommentExample example = new CommentExample();
+            example.createCriteria()
+                    .andTypeEqualTo(CommentTypeEnum.COMMENT.getType())
+                    .andParentIdEqualTo(comment.getId());
+            commentMapper.deleteByExample(example);
+        });
     }
 }

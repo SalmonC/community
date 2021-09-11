@@ -175,6 +175,7 @@ body {
 .redNotice {
     background-color: #d9534f;
 }
+
 .noticeMarginBottom {
     margin-bottom: 4px;
 }
@@ -198,10 +199,38 @@ body {
     -moz-background-size: cover;
     -ms-background-size: cover;
 }
+
 .background_transparent {
     background-color: transparent;
 }
-.background_white {
-    background-color: white;
+
+.page-right-block {
+    background-color: rgba(255, 255, 255, 0.85);
     margin: 10px;
+    padding: 2px 15px 15px;
+    border-radius: 10px;
+}
+
+.page-left-block {
+    background-color: rgba(255, 255, 255, 0.9);
+    margin: 10px;
+    padding: 10px 30px 30px;
+    border-radius: 10px;
+}
+
+.soup {
+    margin: 15px;
+}
+
+.soup-block {
+    padding-left: 2px;
+    padding-bottom: 2px;
+}
+
+.hot-stuff {
+    margin: 10px 15px 15px;
+}
+
+.publish-direct {
+    padding-top: 2px;
 }

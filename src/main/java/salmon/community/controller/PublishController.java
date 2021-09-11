@@ -13,6 +13,7 @@ import salmon.community.mapper.QuestionMapper;
 import salmon.community.model.Question;
 import salmon.community.model.User;
 import salmon.community.service.QuestionService;
+import salmon.community.service.SoupService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +30,9 @@ public class PublishController {
     @Autowired
     private QuestionService questionService;
 
+    @Autowired
+    private SoupService soupService;
+
     @GetMapping("/publish/{id}")
     public String edit(@PathVariable(name = "id") Long id,
                        Model model) {
@@ -38,7 +42,8 @@ public class PublishController {
         model.addAttribute("tag", question.getTag());
         model.addAttribute("id", question.getId());
         model.addAttribute("tags", TagCache.get());
-
+        String soup = soupService.getSoup();
+        model.addAttribute("soup", soup);
         return "publish";
     }
 
@@ -46,6 +51,8 @@ public class PublishController {
     @GetMapping("/publish")
     public String publish(Model model) {
         model.addAttribute("tags", TagCache.get());
+        String soup = soupService.getSoup();
+        model.addAttribute("soup", soup);
         return "publish";
     }
 
@@ -61,6 +68,8 @@ public class PublishController {
         model.addAttribute("description", description);
         model.addAttribute("tag", tag);
         model.addAttribute("tags", TagCache.get());
+        String soup = soupService.getSoup();
+        model.addAttribute("soup", soup);
 
         User user = (User) request.getSession().getAttribute("user");
         if (user == null) {

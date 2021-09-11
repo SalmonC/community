@@ -10,19 +10,21 @@ import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.transaction.support.TransactionTemplate;
 import salmon.community.Constants;
 import salmon.community.dto.PaginationDTO;
 import salmon.community.dto.QuestionDTO;
 import salmon.community.dto.QuestionQueryDTO;
 import salmon.community.exception.CustomizeErrorCode;
 import salmon.community.exception.CustomizeException;
+import salmon.community.mapper.CommentMapper;
 import salmon.community.mapper.QuestionExtMapper;
 import salmon.community.mapper.QuestionMapper;
 import salmon.community.mapper.UserMapper;
-import salmon.community.model.Question;
-import salmon.community.model.QuestionExample;
-import salmon.community.model.User;
-import salmon.community.model.UserExample;
+import salmon.community.model.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,9 +42,12 @@ public class QuestionService {
     @Autowired
     private QuestionExtMapper questionExtMapper;
 
+    @Autowired
+    CommentService commentService;
+
     public PaginationDTO listForIndex(String search, Integer page, Integer size) {
         if (StringUtils.isNotBlank(search)) {
-            String[] split = StringUtils.split(search," ");
+            String[] split = StringUtils.split(search, " ");
             search = Arrays.stream(split).collect(Collectors.joining("|"));
         }
         Integer offset = size * (page - 1);
@@ -197,25 +202,34 @@ public class QuestionService {
         return questionExtMapper.selectHot();
     }
 
+    @Transactional(noRollbackFor = CustomizeException.class)
     public void deleteByToken(String token, Long questionId) {
         Question question = questionMapper.selectByPrimaryKey(questionId);
-        if (question == null){
+        if (question == null) {
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
         }
         UserExample userExample = new UserExample();
         userExample.createCriteria()
                 .andTokenEqualTo(token);
         List<User> users = userMapper.selectByExample(userExample);
-        User user = null;
-        if (users != null || users.size()>0){
+        User user;
+        if (users != null || users.size() > 0) {
             user = users.get(0);
-        }else{
+        } else {
             throw new CustomizeException(CustomizeErrorCode.NO_LOGIN);
         }
-        if(!user.getId().equals(question.getCreator())){
+        if (!user.getId().equals(question.getCreator())) {
             throw new CustomizeException(CustomizeErrorCode.NO_AUTHORITY);
         }
-        questionMapper.deleteByPrimaryKey(questionId);
+        try {
+            //删除问题本身
+            questionMapper.deleteByPrimaryKey(questionId);
+            //删除一二级评论
+            commentService.deleteByMainQuestionId(questionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        }
     }
 }
 

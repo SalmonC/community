@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="soup">
+    <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 page-right-block soup-block">
+        <blockquote class="soup">
+            <p th:text="${soup}"></p>
+            <footer>每日毒鸡汤 from <cite title="Source Title">天行接口</cite></footer>
+        </blockquote>
+    </div>
+</div>
+
+</body>
+</html>

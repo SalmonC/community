@@ -15,7 +15,7 @@
 <div th:insert="~{navigation :: nav}"></div>
 <div class="container-fluid main profile mainBodyPadding background_transparent">
     <div class="row">
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 background_white">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 page-right-block">
             <h2><span th:text="${sectionName}"></span></h2>
             <hr>
 
@@ -91,7 +91,7 @@
                 </nav>
             </div>
         </div>
-        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 background_white">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 page-right-block">
             <div class="list-group section">
                 <a href="/profile/questions"
                    th:class="${section=='questions'} ? 'active list-group-item' : 'list-group-item'">我的问题</a>

@@ -11,6 +11,7 @@ import salmon.community.enums.CommentTypeEnum;
 import salmon.community.model.Question;
 import salmon.community.service.CommentService;
 import salmon.community.service.QuestionService;
+import salmon.community.service.SoupService;
 
 import java.util.List;
 
@@ -27,6 +28,9 @@ public class QuestionController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private SoupService soupService;
+
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Long id,
                            Model model) {
@@ -38,6 +42,8 @@ public class QuestionController {
         model.addAttribute("question", questionDTO);
         model.addAttribute("comments", comments);
         model.addAttribute("relatedQuestions", relatedQuestions);
+        String soup = soupService.getSoup();
+        model.addAttribute("soup", soup);
         return "question";
     }
 }

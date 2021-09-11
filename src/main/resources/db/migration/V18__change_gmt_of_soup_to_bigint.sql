@@ -1,0 +1,1 @@
+alter table SOUP alter column GMT_UPDATE bigint not null;

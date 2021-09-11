@@ -11,6 +11,7 @@ import salmon.community.dto.PaginationDTO;
 import salmon.community.model.User;
 import salmon.community.service.NotificationService;
 import salmon.community.service.QuestionService;
+import salmon.community.service.SoupService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,6 +26,9 @@ public class ProfileController {
 
     @Autowired
     private NotificationService notificationService;
+
+    @Autowired
+    private SoupService soupService;
 
     @GetMapping("/profile/{action}")
     public String profile(@PathVariable(name = "action") String action,
@@ -49,6 +53,8 @@ public class ProfileController {
             model.addAttribute("section", "replies");
             model.addAttribute("sectionName", "最新回复");
         }
+        String soup = soupService.getSoup();
+        model.addAttribute("soup", soup);
         return "profile";
     }
 }
