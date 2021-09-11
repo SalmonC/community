@@ -1,5 +1,6 @@
 #用于忽略特定格式的文件, 上传到git时不上传这些文件
 HELP.md
+logs/
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
