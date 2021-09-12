@@ -1,1 +1,0 @@
-alter table soup alter column gmt_update bigint not null;
