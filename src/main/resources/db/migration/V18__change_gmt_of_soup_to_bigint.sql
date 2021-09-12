@@ -1,1 +1,1 @@
-alter table SOUP alter column GMT_UPDATE bigint not null;
+alter table soup alter column gmt_update bigint not null;

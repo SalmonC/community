@@ -1,13 +1,13 @@
-create table NOTIFICATION
+create table notification
 (
-    ID            BIGINT auto_increment
+    id            bigint auto_increment
         primary key,
-    NOTIFIER      BIGINT        not null,
-    RECEIVER      BIGINT        not null,
-    OUTERID       BIGINT        not null,
-    TYPE          INT           not null,
-    GMT_CREATE    BIGINT        not null,
-    STATUS        INT default 0 not null,
-    NOTIFIER_NAME VARCHAR(100)  not null,
-    OUTER_TITLE   VARCHAR(256)  not null
+    notifier      bigint        not null,
+    receiver      bigint        not null,
+    outerid       bigint        not null,
+    type          int           not null,
+    gmt_create    bigint        not null,
+    status        int default 0 not null,
+    notifier_name varchar(100)  not null,
+    outer_title   varchar(256)  not null
 );

@@ -1,2 +1,2 @@
-alter table USER
-    add AUTHORITY int default 0 not null;
+alter table user
+    add authority int default 0 not null;
