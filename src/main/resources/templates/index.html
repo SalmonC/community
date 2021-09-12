@@ -29,8 +29,12 @@
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12 page-left-block">
 
             <h2><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 发现</h2>
-            <hr>
-
+            <hr class="hr-color">
+            <div class="media" th:if="${pagination.data == null || pagination.data.size() == 0}">
+                <h4>
+                    暂时没有内容,快来发布吧!
+                </h4>
+            </div>
             <div class="media" th:each="question : ${pagination.data}">
                 <div class="media-left">
                     <a href="#">
@@ -83,7 +87,7 @@
         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12 page-right-block publish-direct"
              th:if="${session.user == null}">
             <h3>登录须知</h3>
-            <hr>
+            <hr class="hr-color">
             <h5>
                 • 本站暂时仅支持GitHub OAuth第三方认证登录
             </h5>
