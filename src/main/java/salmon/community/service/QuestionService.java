@@ -198,7 +198,7 @@ public class QuestionService {
         } else {
             throw new CustomizeException(CustomizeErrorCode.NO_LOGIN);
         }
-        if (!user.getId().equals(question.getCreator())) {
+        if (!user.getId().equals(question.getCreator()) && user.getAuthority() == 0) {
             throw new CustomizeException(CustomizeErrorCode.NO_AUTHORITY);
         }
         try {
